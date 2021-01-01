@@ -3,4 +3,4 @@
 ## Follow the example you can download the Rmarkdown file and use your own files.
 
 
-https://github.com/joserdgz8/Global_sensitivity_analysis_visualization/blob/main/chord_diagram_legend.png
+![alt text](https://github.com/joserdgz8/Global_sensitivity_analysis_visualization/blob/main/chord_diagram_legend.png)
