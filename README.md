@@ -4,7 +4,9 @@
 
 ### The visualization follows the next layout
 
-![alt text](https://github.com/joserdgz8/Global_sensitivity_analysis_visualization/blob/main/chord_diagram_legend.png)
+![](https://github.com/joserdgz8/Global_sensitivity_analysis_visualization/blob/main/chord_diagram_legend.png)
 
 ### Example: 
+
+![](https://github.com/joserdgz8/Global_sensitivity_analysis_visualization/blob/main/EXAMPLE.png)
 
