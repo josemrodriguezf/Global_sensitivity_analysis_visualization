@@ -1,0 +1,143 @@
+---
+title: "Plot Global Sensitivity Analysis Indices"
+author: "Jose M. Rodriguez Flores"
+date: "01/01/2020"
+output: html_document
+---
+
+
+### This code adds the First Order and Total Order Indices to  the visualization by Tina Karimi which shows Second Order interactions https://waterprogramming.wordpress.com/2020/06/01/displaying-interactions-with-chorddiagram-in-r/ with some modifications to her code.
+
+```{r message=FALSE}
+library(RColorBrewer) # good color palettes
+library(graphics)     # used when plotting polygons
+library(plotrix)      # used when plotting circles
+library(dplyr)
+library(tidyverse)
+library(circlize)
+library(ComplexHeatmap)
+library(colorspace)
+```
+
+### Load files with Indices
+
+```{r, results='hide'}
+First_order <- read.csv('First_order.csv')
+Total_order <- read.csv('Total_order.csv')
+Second_order <- read.csv('Second_order.csv')
+```
+
+### You can use two conditions to filter the most important variables
+
+```{r, results='hide'}
+list_high <- First_order[abs(First_order$S1)>=0.003,"X"] #In this case I choose those variables which First Order Index is bigger than 0.003
+list_sig <- Total_order[abs(Total_order$ST)-First_order$S1_conf>0,"X"] #Using confidence levels from SALib
+```
+
+```{r, results='hide'}
+Second_order2 <- filter(Second_order,(X1%in%list_high)&(X2%in%list_high)) #Filter only those that you selected from your condition 
+Second_order2 <- Second_order2%>%select(X1,X2,S2) #Select only the first two columns
+```
+
+```{r, results='hide'}
+#Before we run the next chunk lets edit some of the visualization features 
+title = "High Order Sobol Sensitivity Indices Plot"
+
+abs_max3 = round(abs(max(Second_order2$S2)),3) #Maximum second order index
+abs_min3 = 0.001 #Minimum  second order index used in the chorddiagram function
+
+col2 = colorRamp2(c(abs_min3,mean(c(abs_min3,mean(c(abs_min3,abs_max3)))),mean(c(abs_min3,abs_max3)),mean(c(mean(c(abs_min3,abs_max3)),abs_max3)),abs_max3),sequential_hcl(palette="Red-Blue",n=5,rev=TRUE,alpha = 1)) #This line creates a color palette for the second order indices (ribons in the chord diagram) you can use your favorite colors in this case I am using the hcl package
+
+abs_max = 0.98 #Maximum value of First Order Index for legend visualization 
+abs_min= 0.003 #Minimum value of First Order Index for legend visualization 
+
+#Create color function using the minimum and maximum for First Order Index 
+col_fun = colorRamp2(c(abs_min,mean(c(abs_min,mean(c(abs_min,abs_max)))),mean(c(abs_min,abs_max)),mean(c(mean(c(abs_min,abs_max)),abs_max)),abs_max), sequential_hcl(palette="Hawaii",n=5,rev=TRUE))
+
+abs_max2 = 0.98 #Maximum value of First Order Index for legend visualization 
+abs_min2 = 0.003 #Minimum value of First Order Index for legend visualization 
+
+#Create color function using the minimum and maximum for First Total Order Index 
+col_fun2 = colorRamp2(c(abs_min2,mean(c(abs_min2,mean(c(abs_min2,abs_max2)))),mean(c(abs_min2,abs_max2)),mean(c(mean(c(abs_min2,abs_max2)),abs_max2)),abs_max2), sequential_hcl(palette="Plasma",n=5,rev=TRUE)) 
+
+```
+
+### See https://jokergoo.github.io/circlize_book/book/advanced-usage-of-chorddiagram.html#customize-sector-axes for more of the chordDiagram function
+
+# The Visualization follows the next layout
+
+![](/home/jose_m_rodriguez/Cloud/Box_UC_Merced/Research/Repos/Open_Ag_Kern_repo/GSA/Simulation/Results/chord_diagram_legend.png)
+
+```{r fig1, fig.height = 8, fig.width = 12, message=FALSE}
+pdf(file='Example.pdf',width=12,height=10)
+GSA_1 = chordDiagram(Second_order2,order = c("AL1","AL3","GR","SW","V1","V3"),grid.col = "white" ,col=col2, annotationTrackHeight = mm_h(1), link.sort = TRUE, link.decreasing = TRUE,annotationTrack = "grid", preAllocateTracks = list(1),link.visible = c(Second_order2[[3]] >= abs_min3| Second_order2[[3]] <= (-1*abs_min3)),directional = 1,scale=FALSE,link.lwd = 2,link.lty = 1, link.border = "black")
+
+title(title,adj=0.5,font.main= 2,cex.main=1) #Add title to the plot 
+
+circos.track (track.index = 2, panel.fun = function(x, y) {
+xlim = get.cell.meta.data("xlim")
+ylim = get.cell.meta.data("ylim")
+sector.name = get.cell.meta.data("sector.index")
+circos.text(mean(xlim), ylim[1]+.1, sector.name, facing = "bending.inside", niceFacing = TRUE, adj = c(0.5,-1),cex = 1,font=1)
+circos.axis(h = "bottom", labels.cex = 1, major.tick.length = 0.5, track.index = 2,labels=FALSE)}, 
+  bg.border = NA)
+
+
+ylim = get.cell.meta.data("ylim", sector.index = GSA_1$cn[nrow(GSA_1)], track.index = 1)
+y1 = ylim[1] + (ylim[2] - ylim[1])*0.3
+y2 = ylim[2]
+
+#We basically add a lot of  rectangles:
+
+for(i in seq_len(nrow(GSA_1))){
+   circos.rect(GSA_1[i, "x1"], y1 + (y2-y1)*0.55, GSA_1[i, "x1"] - abs(GSA_1[i, "value1"]), y2*0.85,
+      col = col_fun2(abs(Total_order[Total_order$X==GSA_1$rn[i],"ST"])), 
+      border = col_fun2(abs(Total_order[Total_order$X==GSA_1$rn[i],"ST"])),
+      sector.index = GSA_1$rn[i], track.index = 1)
+  
+  circos.rect(GSA_1[i, "x1"], y1*1.5, GSA_1[i, "x1"] - abs(GSA_1[i, "value1"]), y1 + (y2-y1)*0.45,
+      col = col_fun(abs(First_order[First_order$X==GSA_1$rn[i],"S1"])),
+      border = col_fun(abs(First_order[First_order$X==GSA_1$rn[i],"S1"])),
+      sector.index = GSA_1$rn[i], track.index = 1)
+   
+  circos.rect(GSA_1[i, "x2"], y1 + (y2-y1)*0.55, GSA_1[i, "x2"] - abs(GSA_1[i, "value1"]), y2*0.85,
+      col = col_fun2(abs(Total_order[Total_order$X==GSA_1$cn[i],"ST"])),
+      border = col_fun2(abs(Total_order[Total_order$X==GSA_1$cn[i],"ST"])),
+      sector.index = GSA_1$cn[i], track.index = 1)
+  
+  circos.rect(GSA_1[i, "x2"], y1*1.5, GSA_1[i, "x2"] - abs(GSA_1[i, "value1"]), y1 + (y2-y1)*0.45,
+      col = col_fun(abs(First_order[First_order$X==GSA_1$cn[i],"S1"])),
+      border = col_fun(abs(First_order[First_order$X==GSA_1$cn[i],"S1"])),
+      sector.index = GSA_1$cn[i], track.index = 1)
+    }
+
+
+#Legends using heat maps 
+
+   lgd_FO = Legend(at = c(abs_min,mean(c(abs_min,mean(c(abs_min,abs_max)))),mean(c(abs_min,abs_max)),mean(c(mean(c(abs_min,abs_max)),abs_max)),abs_max),col_fun = col_fun, 
+    title_position = "topleft", title = "S1",direction = "vertical", grid_width = unit(1, "cm"),legend_width =  unit(6,"cm"),legend_height = unit(3.5,"cm"))
+   
+  lgd_links = Legend(at = c(abs_min3,mean(c(abs_min3,mean(c(abs_min3,abs_max3)))),mean(c(abs_min3,abs_max3)),mean(c(mean(c(abs_min3,abs_max3)),abs_max3)),abs_max3), col_fun = col2, 
+    title_position = "topleft", title = "S2",direction = "vertical", grid_width = unit(1, "cm"),legend_width =  unit(6,"cm"),legend_height = unit(3.5,"cm"))
+  
+  lgd_TO = Legend(at = c(abs_min2,mean(c(abs_min2,mean(c(abs_min2,abs_max2)))),mean(c(abs_min2,abs_max2)),mean(c(mean(c(abs_min2,abs_max2)),abs_max2)),abs_max2), col_fun = col_fun2, 
+    title_position = "topleft", title = "ST",direction = "vertical", grid_width = unit(1, "cm"),legend_width =  unit(6,"cm"),legend_height = unit(3.5,"cm"))
+  
+  lgd_list_vertical2 = packLegend(lgd_FO,lgd_links,lgd_TO)
+  
+  draw(lgd_list_vertical2, x = unit(29, "cm"),y=unit(0.5,"npc"))
+  
+  
+    #Highlight groups you can highlight groups adding the next code 
+      
+highlight.sector(c('AL1','AL3'), track.index = 1, border = "black",text = "GROUP 1", cex = 1, text.col = "black", niceFacing = TRUE,padding = c(-0.9, 0, 0.3, 0),font=2, col=NA,lwd = 1.8)
+               
+highlight.sector(c('GR','SW'), track.index = 1, border = "black",text = "GROUP 2", cex = 1, text.col = "black", niceFacing = TRUE,padding = c(-0.9, 0, 0.3, 0),font=2, col=NA,lwd = 1.8)        
+
+highlight.sector(c('V1','V3'), track.index = 1, border = "black",text = "GROUP 3", cex = 1, text.col = "black", niceFacing = TRUE,padding = c(-0.9, 0, 0.3, 0),font=2, col=NA,lwd = 1.8)
+                                  
+dev.off()
+```
+
+
+
