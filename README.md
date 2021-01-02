@@ -2,7 +2,7 @@
 
 ### Follow the example in the Rmarkdown file using the files in the repo, change it and use your own results.
 
-### The visualization follows the next layout, where the Second order index (S2) are the ribbons of the diagram, First Order (S1) and Total order (ST) are depicted as circular rectangles for each variable.
+### The visualization follows the next layout, where the Second order index (S2) are the ribbons of the diagram, First Order (S1) and Total order (ST) are depicted as circular rectangles for each variable. If you want more information of how to interprepate the results look at Andrea Saltelli's books and papers (http://www.andreasaltelli.eu/Articles)
 
 ![](https://github.com/joserdgz8/Global_sensitivity_analysis_visualization/blob/main/chord_diagram_legend.png)
 
