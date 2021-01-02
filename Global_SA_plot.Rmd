@@ -70,7 +70,7 @@ col_fun2 = colorRamp2(c(abs_min2,mean(c(abs_min2,mean(c(abs_min2,abs_max2)))),me
 
 ```{r fig1, fig.height = 8, fig.width = 12, message=FALSE}
 pdf(file='Example.pdf',width=12,height=10)
-GSA_1 = chordDiagram(Second_order2,order = c("AL1","AL3","GR","SW","V1","V3"),grid.col = "white" ,col=col2, annotationTrackHeight = mm_h(1), link.sort = TRUE, link.decreasing = TRUE,annotationTrack = "grid", preAllocateTracks = list(1),link.visible = c(Second_order2[[3]] >= abs_min3| Second_order2[[3]] <= (-1*abs_min3)),directional = 1,scale=FALSE,link.lwd = 2,link.lty = 1, link.border = "black")
+GSA_1 = chordDiagram(Second_order2,order = c("AL1","AL3","GR","SW","V1","V3"),grid.col = "white" ,col=col2, annotationTrackHeight = mm_h(0), link.sort = TRUE, link.decreasing = TRUE,annotationTrack = "grid", preAllocateTracks = list(1),link.visible = c(Second_order2[[3]] >= abs_min3| Second_order2[[3]] <= (-1*abs_min3)),directional = 1,scale=FALSE,link.lwd = 2,link.lty = 1, link.border = "black")
 
 title(title,adj=0.5,font.main= 2,cex.main=1) #Add title to the plot 
 
