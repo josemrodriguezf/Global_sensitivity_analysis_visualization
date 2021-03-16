@@ -31,7 +31,9 @@ Second_order <- read.csv('Second_order.csv')
 
 ```{r, results='hide'}
 list_high <- First_order[abs(First_order$S1)>=0.003,"X"] #In this case I choose those variables which First Order Index is bigger than 0.003
-list_sig <- Total_order[abs(Total_order$ST)-First_order$S1_conf>0,"X"] #Using confidence levels from SALib
+list_sig <- Total_order[abs(Total_order$ST)-Total_order$ST_conf>0,"X"] #Using confidence levels from SALib
+list_top <- Total_order%>%arrange(desc(abs(ST))) #Sometimes we have too many variables and we wanna visualize the most important 
+list_top <- list_high$X[1:10] #Top 10 base on their Total Order sensitivity
 ```
 
 ```{r, results='hide'}
@@ -44,7 +46,7 @@ Second_order2 <- Second_order2%>%select(X1,X2,S2) #Select only the first two col
 title = "High Order Sobol Sensitivity Indices Plot"
 
 abs_max3 = round(abs(max(Second_order2$S2)),3) #Maximum second order index
-abs_min3 = 0.001 #Minimum  second order index used in the chorddiagram function
+abs_min3 = 0.001 #Minimum  second order index used in the chorddiagram function a value lower wont be showed in the chord diagram
 
 col2 = colorRamp2(c(abs_min3,mean(c(abs_min3,mean(c(abs_min3,abs_max3)))),mean(c(abs_min3,abs_max3)),mean(c(mean(c(abs_min3,abs_max3)),abs_max3)),abs_max3),sequential_hcl(palette="Red-Blue",n=5,rev=TRUE,alpha = 1)) #This line creates a color palette for the second order indices (ribons in the chord diagram) you can use your favorite colors in this case I am using the hcl package
 
