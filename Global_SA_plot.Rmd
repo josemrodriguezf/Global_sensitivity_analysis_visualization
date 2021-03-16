@@ -66,7 +66,6 @@ col_fun2 = colorRamp2(c(abs_min2,mean(c(abs_min2,mean(c(abs_min2,abs_max2)))),me
 
 # The Visualization follows the next layout
 
-![](/home/jose_m_rodriguez/Cloud/Box_UC_Merced/Research/Repos/Open_Ag_Kern_repo/GSA/Simulation/Results/chord_diagram_legend.png)
 
 ```{r fig1, fig.height = 8, fig.width = 12, message=FALSE}
 pdf(file='Example.pdf',width=12,height=10)
