@@ -33,7 +33,7 @@ Second_order <- read.csv('Second_order.csv')
 list_high <- First_order[abs(First_order$S1)>=0.003,"X"] #In this case I choose those variables which First Order Index is bigger than 0.003
 list_sig <- Total_order[abs(Total_order$ST)-Total_order$ST_conf>0,"X"] #Using confidence levels from SALib
 list_top <- Total_order%>%arrange(desc(abs(ST))) #Sometimes we have too many variables and we wanna visualize the most important 
-list_top <- list_high$X[1:10] #Top 10 base on their Total Order sensitivity
+list_top <- list_top$X[1:10] #Top 10 base on their Total Order sensitivity
 ```
 
 ```{r, results='hide'}
