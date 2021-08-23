@@ -10,3 +10,5 @@ The visualization follows the next layout, where the Second order index (S2) are
 
 ![](https://github.com/joserdgz8/Global_sensitivity_analysis_visualization/blob/main/EXAMPLE.png)
 
+
+
