@@ -1,6 +1,6 @@
 This repository has an example to plot Sobol First Order, Total Order, and Second Order sensitivity indices in a chord diagram plot and using heat map. In this example I obtained the indices using SAlib python library (Herman et al, (2017), SALib: An open-source Python library for Sensitivity Analysis, Journal of Open Source Software, 2(9), 97, doi:10.21105/joss.00097), which can be downloaded at https://salib.readthedocs.io/en/latest/. 
 
-This code was used to visualize the results from the paper available in pre-print: https://assets.researchsquare.com/files/rs-655015/v1_covered.pdf?c=1627056031 
+This code was used to visualize the results from the paper "Global sensitiivty analysis of a coupled Hydro-economic model and Groundwater restriction assesment" that you can reference, available in pre-print: https://assets.researchsquare.com/files/rs-655015/v1_covered.pdf?c=1627056031 
 
 ### Follow the example in the Rmarkdown file using the files in the repo, change it and use your own results they can be from SALib or any output that has the same format as in the example.
 
