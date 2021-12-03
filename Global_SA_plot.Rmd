@@ -56,8 +56,8 @@ abs_min= 0.003 #Minimum value of First Order Index for legend visualization
 #Create color function using the minimum and maximum for First Order Index 
 col_fun = colorRamp2(c(abs_min,mean(c(abs_min,mean(c(abs_min,abs_max)))),mean(c(abs_min,abs_max)),mean(c(mean(c(abs_min,abs_max)),abs_max)),abs_max), sequential_hcl(palette="Hawaii",n=5,rev=TRUE))
 
-abs_max2 = 0.98 #Maximum value of First Order Index for legend visualization 
-abs_min2 = 0.003 #Minimum value of First Order Index for legend visualization 
+abs_max2 = 0.98 #Maximum value of Total Order Index for legend visualization 
+abs_min2 = 0.003 #Minimum value of Total Order Index for legend visualization 
 
 #Create color function using the minimum and maximum for First Total Order Index 
 col_fun2 = colorRamp2(c(abs_min2,mean(c(abs_min2,mean(c(abs_min2,abs_max2)))),mean(c(abs_min2,abs_max2)),mean(c(mean(c(abs_min2,abs_max2)),abs_max2)),abs_max2), sequential_hcl(palette="Plasma",n=5,rev=TRUE)) 
